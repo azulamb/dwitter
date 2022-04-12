@@ -1,4 +1,4 @@
-import { TwitterApiLogs } from './cache.ts';
+import { TwitterApiLogs } from './Cache.ts';
 import { OAuth } from './OAuth.ts';
 import { OAuth2 } from './OAuth2.ts';
 import { TwitterAPI } from './TwitterAPI.ts';

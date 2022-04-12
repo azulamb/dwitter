@@ -1,6 +1,6 @@
 import * as TwitterTypes from './twitter.d.ts';
 import { APICounter } from './APICounter.ts';
-import { HMAC_SHA1 } from './crypto.ts'
+import { HMAC_SHA1 } from './Crypto.ts'
 
 interface FetchParams { [ keys: string ]: string | number | boolean | undefined }
 
