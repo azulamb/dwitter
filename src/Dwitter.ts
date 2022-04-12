@@ -5,7 +5,7 @@ import { TwitterAPI } from './TwitterAPI.ts';
 import { V1_1 } from './v1/1.ts';
 import { V2_0 } from './v2/0.ts';
 
-export class Twitter extends TwitterAPI
+export class Dwitter extends TwitterAPI
 {
 	protected logs: TwitterApiLogs =
 	{
