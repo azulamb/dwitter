@@ -11,6 +11,18 @@ interface HomeTimelineOption
 	include_entities?: boolean; //
 }
 
+interface UserTimelineOption
+{
+	count?: number; // Max 200
+	since_id?: number;
+	max_id?: number; //
+	trim_user?: boolean; //
+	exclude_replies?: boolean; //
+	include_rts?: boolean; //
+	user_id?: string;
+	screen_name?: string;
+}
+
 interface ShowOption
 {
 	trim_user?: boolean;
@@ -28,6 +40,7 @@ export class Statuses extends APICounter
 	{
 		// destroy:{}, // https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-destroy-id
 		home_timeline: { count: 15, time: 15 }, // https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-home_timeline
+		user_timeline: { count: 900, time: 15 }, // https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-user_timeline
 		// lookup: { count: 900, time: 15 }, // https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/get-statuses-lookup
 		show: { count: 900, time: 15 }, // https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/get-statuses-show-id
 		// update: { count: 300, time: 180 }, // https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update
@@ -43,6 +56,31 @@ export class Statuses extends APICounter
 	public home_timeline( option: HomeTimelineOption = {} ): Promise<TwitterTypes.Tweet[]>
 	{
 		const api = 'home_timeline';
+		if ( this.isLimit( api ) ) { return this.limitError(); }
+
+		return this.oauthFetch.get( this.createUrl( api ), <{}>option ).then( ( response ) =>
+		{
+			this.addSuccessRequest( api );
+			return response.json();
+		} ).then( async ( result ) =>
+		{
+			if ( result.errors )
+			{
+				throw new Error( `Error: ${ JSON.stringify( result ) }` );
+			}
+
+			await this.save();
+
+			return result;
+		} );
+	}
+
+	/**
+	 * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-user_timeline
+	 */
+	public user_timeline( option: UserTimelineOption = {} ): Promise<TwitterTypes.Tweet[]>
+	{
+		const api = 'user_timeline';
 		if ( this.isLimit( api ) ) { return this.limitError(); }
 
 		return this.oauthFetch.get( this.createUrl( api ), <{}>option ).then( ( response ) =>
