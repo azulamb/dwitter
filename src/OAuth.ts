@@ -183,7 +183,9 @@ export class OAuth extends APICounter
 			{
 				return response.text();
 			}
-			return response.json();
+			return response.text().then((error) => {
+				throw new Error(error);
+			});
 		} ).then( ( result ) =>
 		{
 			if ( typeof result === 'string' ) { return `https://api.twitter.com/oauth/authorize?${ result }`; }
